@@ -8,6 +8,12 @@ if(isset($_POST['generate'])) {
     $email = $_POST['email'];
     $email = htmlspecialchars(strip_tags($email));
 
+    $mob_no = $_POST['mob_no'];
+    $mob_no = htmlspecialchars(strip_tags($mob_no));
+
+    $acode = $_POST['acode'];
+    $acode = htmlspecialchars(strip_tags($acode));
+
     $event = $_POST['event'];
     $event = htmlspecialchars(strip_tags($event));
     
@@ -16,10 +22,19 @@ if(isset($_POST['generate'])) {
     $count = mysqli_num_rows($result);
     $row = mysqli_fetch_assoc($result);
     if($count == 1 ) {
-        $name = $row['name'];
-        header("location: generate.php?name=$name");
+        $errorMsg = 'Candidate already added.';
     } else {
-        $errorMsg = ' You are not eligible for this certification.';
+        if($acode == 96321) {
+            $sql1 = "insert into certi(name, email, mob_no) values('$username', '$email', '$mob_no')";
+            if(mysqli_query($conn, $sql1))
+            {
+                $successMsg = "Registeration Successfull. Please Login.";
+            } else {
+                $errorMsg = 'There was some error inserting the data.';
+            }
+        } else {
+            $errorMsg = 'Wrong Access Code';
+        }
     }
 }
 ?>
@@ -42,24 +57,33 @@ if(isset($_POST['generate'])) {
             <h1 class="text-center mt-5"> 
             <img src="./assets/img/favicon.png" class='img-fluid logo' width='60' alt="">
                 <span class="border-bottom border-danger title">
-                    Generate E-Certificate
+                    Insert Data
                 </span>
             </h1>
             <div class="row mt-5 text-dark">
                 <!-- Grid column -->
                 <div class="col-md-6 offset-md-3 mb-4">
+                    <?php if(isset($successMsg)) echo "<div class='alert alert-success text-center'>$successMsg</div>" ?>
                     <?php if(isset($errorMsg)) echo "<div class='alert alert-danger text-center'>$errorMsg</div>" ?>
                     <div class="card">
                         <div class="card-body">
                             <!-- Form register -->
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
                                 <div class="form-group">
-                                    <label for="name">Your Name *</label>
+                                    <label for="name">Name *</label>
                                     <input type="text" name='username' required id="username" class="form-control" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Your email *</label>
+                                    <label for="email">Email *</label>
                                     <input type="email" name='email' required id="email" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="mob_no">Contact No *</label>
+                                    <input type="text" name='mob_no' required id="mob_no" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="acode">Access Code *</label>
+                                    <input type="text" name='acode' required id="acode" class="form-control" />
                                 </div>
                                 <div class="form-group">
                                     <label for="event">Event *</label>
@@ -68,7 +92,7 @@ if(isset($_POST['generate'])) {
                                     </select>
                                 </div>
                                 <div class="text-center">
-                                    <button type='submit' name='generate' class="btn btn-warning">Generate</button>
+                                    <button type='submit' name='generate' class="btn btn-warning">Insert</button>
                                 </div>
                             </form>
                             <!-- Form register -->
