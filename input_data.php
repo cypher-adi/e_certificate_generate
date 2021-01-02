@@ -103,7 +103,7 @@ if(isset($_POST['generate'])) {
             </div>
         </div>
 
-        <footer class='fixed-bottom'>
+        <footer class='mt-2'>
             <div class='bg-dark text-white text-center py-2'>techSRIJAN&copy; 2021 | Created with &hearts; by <a href="https://github.com/cypher-adi"  target='_blank'>Aditya</a> </div>
         </footer>
 
